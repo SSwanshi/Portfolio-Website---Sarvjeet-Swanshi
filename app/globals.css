@@ -1,5 +1,4 @@
 @import "tailwindcss";
-
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -24,3 +23,13 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.dark body {
+  background: #0a0a0a;
+  color: #ededed;
+}
+
+.cursor-light-supreme {
+  z-index: 2147483647; /* Maximum safe z-index value */
+}
+

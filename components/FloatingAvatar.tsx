@@ -33,6 +33,7 @@ export const FloatingAvatar: React.FC<FloatingAvatarProps> = ({
             src="/self.jpg"
             alt="Sarvjeet - Full Stack Developer"
             fill
+            sizes="(max-width: 768px) 288px, (max-width: 1024px) 384px, 448px"
             className="object-cover transition-all duration-500 hover:scale-110"
             priority
           />

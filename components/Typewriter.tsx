@@ -43,12 +43,12 @@ const Typewriter: React.FC<TypewriterProps> = ({
 
   return (
     <motion.span
-      className="font-semibold text-cyan-400 relative"
+      className="font-semibold text-white relative code-typing"
       animate={{
         textShadow: [
-          '0 0 0px rgba(34, 211, 238, 0)',
-          '0 0 20px rgba(34, 211, 238, 0.8)',
-          '0 0 0px rgba(34, 211, 238, 0)'
+          '0 0 0px rgba(255, 255, 255, 0)',
+          '0 0 20px rgba(255, 255, 255, 0.8)',
+          '0 0 0px rgba(255, 255, 255, 0)'
         ]
       }}
       transition={{
@@ -59,7 +59,7 @@ const Typewriter: React.FC<TypewriterProps> = ({
     >
       {displayedText}
       <motion.span
-        className="inline-block w-0.5 h-6 bg-cyan-400 ml-1"
+        className="inline-block w-0.5 h-6 bg-white ml-1"
         animate={{ opacity: [0, 1, 0] }}
         transition={{ duration: 1, repeat: Infinity }}
       />

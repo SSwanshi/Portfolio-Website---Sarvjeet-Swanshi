@@ -45,13 +45,13 @@ const CursorLightEffect = () => {
   return (
     <div className="fixed inset-0 pointer-events-none z-[9999] overflow-hidden">
       <div
-        className={`absolute w-96 h-96 rounded-full transition-opacity duration-200 ease-out ${
+        className={`absolute w-[28rem] h-[28rem] rounded-full transition-opacity duration-200 ease-out ${
           isVisible ? 'opacity-100' : 'opacity-0'
         }`}
         style={{
-          background: 'radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, rgba(139, 92, 246, 0.15) 50%, rgba(236, 72, 153, 0.15) 100%)',
-          filter: 'blur(40px)',
-          transform: `translate3d(${mousePos.x - 192}px, ${mousePos.y - 192}px, 0)`, // Hardware accelerated positioning
+          background: 'radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.3) 30%, rgba(255, 255, 255, 0.2) 60%, rgba(255, 255, 255, 0.05) 100%)',
+          filter: 'blur(35px) brightness(1.3)',
+          transform: `translate3d(${mousePos.x - 224}px, ${mousePos.y - 224}px, 0)`, // Hardware accelerated positioning
           willChange: 'transform', // Optimize for animations
         }}
       />

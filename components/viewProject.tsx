@@ -23,38 +23,11 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({
       whileTap={{ scale: 0.95 }}
       className={`relative group ${className}`}
     >
-      <motion.div
-        className="absolute -inset-1 bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 rounded-full blur opacity-60 group-hover:opacity-100 transition duration-300"
-        animate={{ rotate: [0, 360] }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "linear",
-        }}
-      />
-      <div className="relative px-8 py-4 bg-gradient-to-r from-cyan-600 to-blue-700 text-white font-semibold rounded-full overflow-hidden shadow-lg border border-cyan-500/30">
-        <motion.div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        <motion.div className="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12" />
-        <div className="relative z-10 flex items-center gap-3">
-          <motion.span
-            className="text-lg"
-            animate={{ scale: [1, 1.1, 1] }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          >
-            🚀
-          </motion.span>
+      <div className="relative px-8 py-4 bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white font-semibold rounded-full hover:border-white/50 transition-all duration-300 shadow-lg hover:shadow-white/25">
+        <div className="flex items-center gap-3">
+          <span className="text-lg">🚀</span>
           {label}
-          <motion.span
-            animate={{ x: [0, 5, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            className="text-xl"
-          >
-            →
-          </motion.span>
+          <span className="text-xl">→</span>
         </div>
       </div>
     </motion.div>

@@ -9,11 +9,11 @@ interface FooterProps {
 
 export const Footer = ({ name, title, year = new Date().getFullYear(), socialLinks }: FooterProps) => {
   return (
-    <footer className="py-12 bg-slate-900 border-t border-white/10">
+    <footer className="py-12 bg-black border-t border-white/20">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-4 md:mb-0">
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-600 bg-clip-text text-transparent">
+            <h3 className="text-2xl font-bold text-white">
               {name}
             </h3>
             <p className="text-gray-400 mt-2">{title}</p>
@@ -27,7 +27,7 @@ export const Footer = ({ name, title, year = new Date().getFullYear(), socialLin
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.1, y: -2 }}
-                className="text-gray-400 hover:text-cyan-400 transition-colors duration-300"
+                className="text-gray-400 hover:text-white transition-colors duration-300"
               >
                 {label}
               </motion.a>
@@ -35,7 +35,7 @@ export const Footer = ({ name, title, year = new Date().getFullYear(), socialLin
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-white/10 text-center text-gray-400">
+        <div className="mt-8 pt-8 border-t border-white/20 text-center text-gray-400">
           <p>&copy; {year} {name}. All rights reserved.</p>
         </div>
       </div>

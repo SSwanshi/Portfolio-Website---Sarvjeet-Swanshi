@@ -5,7 +5,7 @@ import { SkillsSection, Skill } from "../components/Skills";
 import ContactSection from "../components/Contact";
 import { Navbar } from "../components/Navbar";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Zap, GitBranch } from "lucide-react";
 import { ProjectsSection } from "@/components/ProjectSection";
 import { AboutSection } from "@/components/About";
@@ -112,6 +112,7 @@ const projects = [
 
 export default function Home() {
   const ref = useRef(null);
+  const [loaderComplete, setLoaderComplete] = useState(false);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"]
@@ -120,15 +121,15 @@ export default function Home() {
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   return (
-    <main ref={ref} className="min-h-screen transition-colors duration-300 relative overflow-hidden">
+    <main ref={ref} className="min-h-screen transition-colors duration-300 relative overflow-hidden bg-black" style={{ position: 'relative' }}>
       {/* Navbar */}
-      <Navbar />
+      <Navbar loaderComplete={loaderComplete} />
 
-      {/* Parallax Background */}
+      {/* Developer-themed Parallax Background */}
       <motion.div
         className="fixed inset-0 z-0"
         style={{
-          backgroundImage: 'radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3), transparent 50%), radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3), transparent 50%), radial-gradient(circle at 40% 40%, rgba(120, 200, 255, 0.3), transparent 50%)',
+          backgroundImage: 'radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1), transparent 50%), radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05), transparent 50%), radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.08), transparent 50%)',
           y: backgroundY,
         }}
       />
@@ -137,7 +138,7 @@ export default function Home() {
       <div className="relative z-10">
         {/* Hero Section - wrapped with home id */}
         <section id="home">
-          <Hero />
+          <Hero onLoaderComplete={setLoaderComplete} />
         </section>
 
 
@@ -151,7 +152,7 @@ export default function Home() {
       building full-stack web applications that solve real-world problems. I specialize in modern
       technologies like React, Next.js, and Node.js, and I enjoy crafting clean, scalable digital solutions.
       <span
-        className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-cyan-400 to-purple-600 rounded-full animate-[shine_3s_ease-in-out_infinite]"
+        className="absolute bottom-0 left-0 w-0 h-0.5 bg-white rounded-full animate-[shine_3s_ease-in-out_infinite]"
         style={{ animation: "shine 3s ease-in-out infinite" }}
       />
     </div>,
@@ -160,24 +161,25 @@ export default function Home() {
       and contributing to meaningful projects. Whether it&apos;s improving user experience or writing better code,
       I strive to grow as a developer every day.
       <span
-        className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-cyan-400 to-purple-600 rounded-full animate-[shine_3s_ease-in-out_infinite_reverse] opacity-50"
+        className="absolute bottom-0 left-0 w-0 h-0.5 bg-white rounded-full animate-[shine_3s_ease-in-out_infinite_reverse] opacity-50"
         style={{ animation: "shine 3s ease-in-out infinite reverse" }}
       />
     </div>
   ]}
   stats={[
-    { label: "Projects Completed", value: "10+", color: "cyan-400" },
-    { label: "Years Experience", value: "2+", color: "purple-400" }
+    { label: "Projects Completed", value: "10+", color: "white" },
+    { label: "Years Experience", value: "2+", color: "white" }
   ]}
 />
         <ProjectsSection projects={projects} />
         <SkillsSection skills={mySkills} />
         <ContactSection
-          heading="Let’s Work Together"
-          description="Ready to bring your ideas to life? Let’s create something amazing together."
+          heading="Let's Work Together"
+          description="Ready to bring your ideas to life? Let's create something amazing together."
           buttons={[
-            { label: "Get In Touch", variant: "primary", onClick: () => console.log("Contact clicked") },
+            { label: "Get In Touch", variant: "primary" },
           ]}
+          sectionId="contact"
         />
         <Footer
   name="Sarvjeet Swanshi"

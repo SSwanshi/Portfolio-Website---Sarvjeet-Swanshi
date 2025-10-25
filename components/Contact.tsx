@@ -1,7 +1,14 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { X, Mail, User, MessageSquare, Send, Loader2, CheckCircle, AlertCircle } from "lucide-react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import emailjs from '@emailjs/browser'; // Uncomment when you install EmailJS
+
+// Register GSAP plugins
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 type ButtonProps = {
     label: string;
@@ -38,6 +45,55 @@ const ContactSection = ({
         email: "",
         message: ""
     });
+
+    // Refs for GSAP animations
+    const contactRef = useRef<HTMLElement>(null);
+    const headingRef = useRef<HTMLDivElement>(null);
+    const buttonsRef = useRef<HTMLDivElement>(null);
+    const formRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (!contactRef.current) return;
+
+        // Simple entrance animations without ScrollTrigger
+        const tl = gsap.timeline({ delay: 0.5 });
+
+        tl.from(headingRef.current, {
+            y: 50,
+            opacity: 0,
+            duration: 1,
+            ease: "power3.out"
+        });
+
+        // Animate buttons separately to ensure they're visible
+        if (buttonsRef.current?.children) {
+            gsap.from(buttonsRef.current.children, {
+                y: 30,
+                opacity: 0,
+                duration: 0.8,
+                stagger: 0.2,
+                ease: "power3.out",
+                delay: 0.3
+            });
+        }
+
+        // Form animation when opened - simplified
+        if (isFormOpen && formRef.current) {
+            gsap.set(formRef.current, { 
+                scale: 0.8, 
+                opacity: 0 
+            });
+            gsap.to(formRef.current, {
+                scale: 1,
+                opacity: 1,
+                duration: 0.3,
+                ease: "power2.out"
+            });
+        }
+
+
+    }, [isFormOpen]);
+
 
     const showToast = (type: ToastType, message: string) => {
         const id = Date.now().toString();
@@ -120,7 +176,7 @@ const ContactSection = ({
     };
 
     const handleButtonClick = (button: ButtonProps) => {
-        if (button.label.toLowerCase().includes("get in touch")) {
+        if (button.label.toLowerCase().includes("get in touch") || button.label.toLowerCase().includes("contact")) {
             setIsFormOpen(true);
         } else if (button.onClick) {
             button.onClick();
@@ -165,62 +221,73 @@ const ContactSection = ({
 
     return (
         <>
-            <section id={sectionId} className="py-20 bg-gradient-to-b from-slate-800 to-slate-900">
-                <div className="container mx-auto px-4">
+            <section ref={contactRef} id={sectionId} className="py-20 bg-black relative overflow-hidden">
+
+                <div className="container mx-auto px-4 relative z-10">
                     <motion.div
+                        ref={headingRef}
                         initial={{ opacity: 0, y: 50 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.8 }}
                         className="text-center max-w-3xl mx-auto"
                     >
-                        <h2 className="text-5xl font-bold bg-gradient-to-r from-cyan-400 to-purple-600 bg-clip-text text-transparent mb-6">
+                        <h2 className="text-5xl font-bold text-white mb-6">
                             {heading}
                         </h2>
                         <p className="text-xl text-gray-300 mb-12">{description}</p>
 
-                        <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                            {buttons.map((button, idx) => (
+                        <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-6 justify-center">
+                            {buttons && buttons.length > 0 ? (
+                                buttons.map((button, idx) => (
+                                    <motion.button
+                                        key={idx}
+                                        whileHover={{ scale: 1.05, y: -2 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        onClick={() => handleButtonClick(button)}
+                                        className={
+                                            button.variant === "primary"
+                                                ? "px-8 py-4 bg-white text-black font-semibold rounded-full shadow-lg hover:shadow-white/25 transition-all duration-300"
+                                                : "px-8 py-4 border-2 border-white text-white font-semibold rounded-full hover:border-gray-300 transition-all duration-300 backdrop-blur-sm"
+                                        }
+                                    >
+                                        {button.label}
+                                    </motion.button>
+                                ))
+                            ) : (
                                 <motion.button
-                                    key={idx}
                                     whileHover={{ scale: 1.05, y: -2 }}
                                     whileTap={{ scale: 0.95 }}
-                                    onClick={() => handleButtonClick(button)}
-                                    className={
-                                        button.variant === "primary"
-                                            ? "px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-full shadow-lg hover:shadow-cyan-500/25 transition-all duration-300"
-                                            : "px-8 py-4 border-2 border-purple-500 text-purple-400 font-semibold rounded-full hover:border-purple-400 transition-all duration-300 backdrop-blur-sm"
-                                    }
+                                    onClick={() => setIsFormOpen(true)}
+                                    className="px-8 py-4 bg-white text-black font-semibold rounded-full shadow-lg hover:shadow-white/25 transition-all duration-300"
                                 >
-                                    {button.label}
+                                    Get In Touch
                                 </motion.button>
-                            ))}
+                            )}
                         </div>
                     </motion.div>
                 </div>
             </section>
 
             {/* Contact Form Modal */}
-            <AnimatePresence>
-                {isFormOpen && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            {isFormOpen && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div 
+                        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
                         onClick={() => setIsFormOpen(false)}
+                    />
+                    <motion.div
+                        ref={formRef}
+                        initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                        animate={{ scale: 1, opacity: 1, y: 0 }}
+                        exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                        transition={{ duration: 0.3 }}
+                        className="bg-black p-8 rounded-2xl shadow-2xl border border-white/20 w-full max-w-md relative z-50"
+                        onClick={(e) => e.stopPropagation()}
                     >
-                        <motion.div
-                            initial={{ scale: 0.9, opacity: 0, y: 20 }}
-                            animate={{ scale: 1, opacity: 1, y: 0 }}
-                            exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                            transition={{ duration: 0.3 }}
-                            className="bg-gradient-to-br from-slate-900 to-slate-800 p-8 rounded-2xl shadow-2xl border border-slate-700 w-full max-w-md"
-                            onClick={(e) => e.stopPropagation()}
-                        >
                             {/* Header */}
                             <div className="flex items-center justify-between mb-6">
-                                <h3 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-600 bg-clip-text text-transparent">
+                                <h3 className="text-2xl font-bold text-white">
                                     Get in Touch
                                 </h3>
                                 <button
@@ -241,7 +308,7 @@ const ContactSection = ({
                                         value={formData.name}
                                         onChange={handleInputChange}
                                         placeholder="Your Name"
-                                        className="w-full pl-12 pr-4 py-3 bg-slate-800/50 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all"
+                                        className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-all"
                                     />
                                 </div>
 
@@ -253,7 +320,7 @@ const ContactSection = ({
                                         value={formData.email}
                                         onChange={handleInputChange}
                                         placeholder="Your Email"
-                                        className="w-full pl-12 pr-4 py-3 bg-slate-800/50 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all"
+                                        className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-all"
                                     />
                                 </div>
 
@@ -277,8 +344,8 @@ const ContactSection = ({
                                         onClick={() => setIsFormOpen(false)}
                                         disabled={isLoading}
                                         className={`flex-1 py-3 border-2 font-semibold rounded-lg transition-all duration-300 ${isLoading
-                                                ? 'border-gray-600 text-gray-500 cursor-not-allowed'
-                                                : 'border-gray-600 text-gray-300 hover:border-gray-500'
+                                                ? 'border-white/20 text-gray-500 cursor-not-allowed'
+                                                : 'border-white/20 text-gray-300 hover:border-white/40'
                                             }`}
                                     >
                                         Cancel
@@ -290,8 +357,8 @@ const ContactSection = ({
                                         onClick={handleSubmit}
                                         disabled={isLoading}
                                         className={`flex-1 py-3 font-semibold rounded-lg shadow-lg transition-all duration-300 flex items-center justify-center gap-2 ${isLoading
-                                                ? 'bg-gray-600 cursor-not-allowed'
-                                                : 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:shadow-cyan-500/25'
+                                                ? 'bg-white/20 cursor-not-allowed'
+                                                : 'bg-white text-black hover:shadow-white/25'
                                             }`}
                                     >
                                         {isLoading ? (
@@ -309,9 +376,8 @@ const ContactSection = ({
                                 </div>
                             </div>
                         </motion.div>
-                    </motion.div>
+                    </div>
                 )}
-            </AnimatePresence>
 
             {/* Toast Container */}
             <ToastContainer />

@@ -8,7 +8,7 @@ const Resume = () => {
   const [hasError, setHasError] = useState(false);
   
   // Replace this with your actual PDF path
-  const resumePdfPath = '/Resume - Sarvjeet Swanshi.pdf';
+  const resumePdfPath = '/Sarvjeet Swanshi.pdf';
   
   const handleDownload = () => {
     const link = document.createElement('a');

@@ -74,7 +74,7 @@ const Resume = () => {
                   <AlertCircle className="w-12 h-12 text-red-400" />
                   <div>
                     <p className="text-white font-medium text-lg">Unable to load PDF directly</p>
-                    <p className="text-gray-400 mt-1">Don't worry, you can still download it.</p>
+                    <p className="text-gray-400 mt-1">Don&#39;t worry, you can still download it.</p>
                   </div>
                   <button
                     onClick={handleDownload}

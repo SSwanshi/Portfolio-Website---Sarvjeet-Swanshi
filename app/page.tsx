@@ -147,9 +147,20 @@ export default function Home() {
 
 
         {/* Other Sections */}
-<AboutSection
+        <AboutSection
   heading="About Me"
   subheading="Crafting digital experiences with cutting-edge technologies"
+  leetcodeUsername="Daboia_russelii"
+  socialLinks={[
+    { label: "LinkedIn", url: "https://www.linkedin.com/in/sarvjeet-swanshi-6b6b0b296", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/linkedin/linkedin-original.svg" },
+    { label: "GitHub", url: "https://github.com/SSwanshi", icon: "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/github-white-icon.png" },
+    { label: "Codolio", url: "https://codolio.com/profile/Daboia_russelii", icon: "https://codolio.com/codolio_assets/codolio.svg" },
+  ]}
+  codingProfiles={[
+    { label: "LeetCode", url: "https://leetcode.com/u/Daboia_russelii/", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/leetcode/leetcode-original.svg" },
+    { label: "GeeksforGeeks", url: "https://www.geeksforgeeks.org/profile/adityamk02?tab=activity", icon: "https://upload.wikimedia.org/wikipedia/commons/e/eb/GeeksForGeeks_logo.png", statText: "150+ problems solved" },
+    { label: "Codeforces", url: "https://codeforces.com/profile/S_Swanshi", icon: "https://store-images.s-microsoft.com/image/apps.48094.14504742535903781.aedbca21-113a-48f4-b001-4204e73b22fc.503f883f-8339-4dc5-8609-81713a59281f", statText: "100+ problems solved" },
+  ]}
   description={[
     <div key="1" className="text-xl text-gray-300 mb-6 leading-relaxed relative">
       I&apos;m a 3rd year undergraduate student at IIIT Sricity, Chittoor, deeply passionate about
@@ -193,6 +204,8 @@ export default function Home() {
     { label: 'GitHub', url: 'https://github.com/SSwanshi' },
     { label: 'LinkedIn', url: 'https://www.linkedin.com/in/sarvjeet-swanshi-6b6b0b296' },
     { label: 'Leetcode', url: 'https://leetcode.com/u/Daboia_russelii/' },
+    { label: 'GeeksforGeeks', url: 'https://www.geeksforgeeks.org/profile/adityamk02?tab=activity' },
+    { label: 'Codeforces', url: 'https://codeforces.com/profile/S_Swanshi' },
     { label: 'Email', url: 'mailto:sarvjeetswanshi25@gmail.com' },
   ]}
 />

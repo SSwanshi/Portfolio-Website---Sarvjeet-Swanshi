@@ -114,13 +114,13 @@ export const ExperienceSection = () => {
                     whileInView={{ scale: 1, rotate: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: index * 0.15 + 0.2 }}
-                    className="relative w-20 h-20 mb-4 rounded-xl overflow-hidden bg-white/5 border border-white/10 p-2"
+                    className="relative w-20 h-20 mb-4 rounded-2xl overflow-hidden bg-white/5 border border-white/10 p-2"
                   >
                     <Image
                       src={exp.logo}
                       alt={exp.company}
                       fill
-                      className="object-contain p-1"
+                      className="object-contain p-1 rounded-2xl"
                     />
                   </motion.div>
                   <h3 className="text-xl font-bold text-white mb-3">{exp.company}</h3>

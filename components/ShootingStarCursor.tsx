@@ -159,7 +159,7 @@ const UNIFORM_DEFAULTS = {
   minFlashingSpeed: 0.1,
   spread: 7,
   maxSpread: 5,
-  maxZ: 150,
+  maxZ: 110,
   blur: 1,
   far: 10,
   maxDiff: 100,

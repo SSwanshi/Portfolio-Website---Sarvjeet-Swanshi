@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
@@ -11,108 +10,12 @@ import ResumeButton from './viewResume';
 import { FloatingAvatar } from './FloatingAvatar';
 import { ScrollIndicator } from './ScrollIndicator';
 import { TechLoader } from './TechLoader';
-import { NetworkThreeScene } from './NetworkThreeScene';
+import { FullStackCanvas } from './FullStackCanvas';
 
 // Register GSAP plugins
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
-
-// Floating Balls Component
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const FloatingBalls = ({ mouseXSpring, mouseYSpring, ballsData }: { 
-    mouseXSpring: any, 
-    mouseYSpring: any,
-    ballsData: Array<{
-        id: number;
-        size: number;
-        initialX: number;
-        initialY: number;
-        color: string;
-        duration: number;
-        delay: number;
-        mouseX: any;
-        mouseY: any;
-    }>
-}) => {
-    return (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            {ballsData.map((ball) => (
-                <motion.div
-  key={ball.id}
-  className={`absolute rounded-full bg-gradient-to-br ${ball.color} backdrop-blur-sm border border-white/10`}
-  style={{
-    width: ball.size,
-    height: ball.size,
-    left: `${ball.initialX}%`,
-    top: `${ball.initialY}%`,
-  }}
-  initial={{
-    x: ball.mouseX,
-    y: ball.mouseY,
-  }}
-  animate={{
-    x: [0, 100, -50, 150, 0],
-    y: [0, -80, 120, -60, 0],
-    scale: [1, 1.2, 0.8, 1.1, 1],
-    opacity: [0.3, 0.7, 0.2, 0.6, 0.3],
-  }}
-  transition={{
-    duration: ball.duration,
-    repeat: Infinity,
-    ease: "linear",
-    delay: ball.delay,
-  }}
-/>
-            ))}
-        </div>
-    );
-};
-
-// Particle System Component
-const ParticleSystem = ({ particlesData }: { 
-    particlesData: Array<{
-        id: number;
-        size: number;
-        initialX: number;
-        initialY: number;
-        duration: number;
-        delay: number;
-        mouseX: any;
-        mouseY: any;
-    }>
-}) => {
-    return (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            {particlesData.map((particle) => (
-                <motion.div
-                    key={particle.id}
-                    className="absolute rounded-full bg-white/10"
-                    style={{
-                        width: particle.size,
-                        height: particle.size,
-                        left: `${particle.initialX}%`,
-                        top: `${particle.initialY}%`,
-                        x: particle.mouseX,
-                        y: particle.mouseY,
-                    }}
-                    animate={{
-                        x: [0, 50, -30, 80, 0],
-                        y: [0, -100, 150, -80, 0],
-                        opacity: [0, 0.6, 0.2, 0.8, 0],
-                        scale: [0, 1, 0.5, 1, 0],
-                    }}
-                    transition={{
-                        duration: particle.duration,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                        delay: particle.delay,
-                    }}
-                />
-            ))}
-        </div>
-    );
-};
 
 interface HeroProps {
   onLoaderComplete?: (complete: boolean) => void;
@@ -121,7 +24,6 @@ interface HeroProps {
 export const Hero = ({ onLoaderComplete }: HeroProps) => {
     const [mounted, setMounted] = useState(false);
     const [loaderComplete, setLoaderComplete] = useState(false);
-    // Mouse position is handled internally by NetworkThreeScene
     const { scrollYProgress } = useScroll();
     const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
     const opacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
@@ -132,7 +34,6 @@ export const Hero = ({ onLoaderComplete }: HeroProps) => {
     const subtitleRef = useRef<HTMLParagraphElement>(null);
     const buttonsRef = useRef<HTMLDivElement>(null);
     const avatarRef = useRef<HTMLDivElement>(null);
-    const binaryRainRef = useRef<HTMLDivElement>(null);
 
     // Mouse tracking
     const mouseX = useMotionValue(0);
@@ -141,15 +42,9 @@ export const Hero = ({ onLoaderComplete }: HeroProps) => {
     const mouseXSpring = useSpring(mouseX, springConfig);
     const mouseYSpring = useSpring(mouseY, springConfig);
 
-    // Transform values for animated background elements
+    // Transform values for animated background grid
     const gridX = useTransform(mouseXSpring, [-1, 1], [-5, 5]);
     const gridY = useTransform(mouseYSpring, [-1, 1], [-5, 5]);
-    
-    // Transform values for balls and particles
-    const ballMouseX = useTransform(mouseXSpring, [-1, 1], [-30, 30]);
-    const ballMouseY = useTransform(mouseYSpring, [-1, 1], [-20, 20]);
-    const particleMouseX = useTransform(mouseXSpring, [-1, 1], [-10, 10]);
-    const particleMouseY = useTransform(mouseYSpring, [-1, 1], [-10, 10]);
 
     // Scroll to projects section function
     const scrollToProjects = () => {
@@ -159,91 +54,6 @@ export const Hero = ({ onLoaderComplete }: HeroProps) => {
                 behavior: 'smooth',
                 block: 'start'
             });
-        }
-    };
-
-    // Create balls data with transform values - use deterministic values for SSR
-    const ballsData = Array.from({ length: 15 }, (_, i) => {
-        // Use deterministic seed based on index for SSR consistency
-        const seed = i * 0.1;
-        const size = (Math.sin(seed) * 0.5 + 0.5) * 40 + 20; // 20-60px
-        const initialX = (Math.sin(seed * 2) * 0.5 + 0.5) * 100;
-        const initialY = (Math.sin(seed * 3) * 0.5 + 0.5) * 100;
-        const colorIndex = Math.floor((Math.sin(seed * 4) * 0.5 + 0.5) * 5);
-        const duration = (Math.sin(seed * 5) * 0.5 + 0.5) * 10 + 15; // 15-25s
-        const delay = (Math.sin(seed * 6) * 0.5 + 0.5) * 5;
-        
-        return {
-            id: i,
-            size,
-            initialX,
-            initialY,
-            color: [
-                'from-cyan-400/20 to-blue-500/20',
-                'from-purple-400/20 to-pink-500/20',
-                'from-emerald-400/20 to-teal-500/20',
-                'from-amber-400/20 to-orange-500/20',
-                'from-indigo-400/20 to-violet-500/20',
-            ][colorIndex],
-            duration,
-            delay,
-            mouseX: ballMouseX,
-            mouseY: ballMouseY,
-        };
-    });
-
-    // Create particles data with transform values - use deterministic values for SSR
-    const particlesData = Array.from({ length: 25 }, (_, i) => {
-        // Use deterministic seed based on index for SSR consistency
-        const seed = i * 0.15;
-        const size = (Math.sin(seed) * 0.5 + 0.5) * 6 + 2; // 2-8px
-        const initialX = (Math.sin(seed * 2) * 0.5 + 0.5) * 100;
-        const initialY = (Math.sin(seed * 3) * 0.5 + 0.5) * 100;
-        const duration = (Math.sin(seed * 4) * 0.5 + 0.5) * 20 + 20; // 20-40s
-        const delay = (Math.sin(seed * 5) * 0.5 + 0.5) * 10;
-        
-        return {
-            id: i,
-            size,
-            initialX,
-            initialY,
-            duration,
-            delay,
-            mouseX: particleMouseX,
-            mouseY: particleMouseY,
-        };
-    });
-
-    // Binary rain effect - deterministic for SSR
-    const createBinaryRain = () => {
-        if (!binaryRainRef.current) return;
-        
-        const binaryChars = ['0', '1', 'A', 'B', 'C', 'D', 'E', 'F'];
-        const columns = Math.floor(window.innerWidth / 20);
-        
-        for (let i = 0; i < columns; i++) {
-            const column = document.createElement('div');
-            column.className = 'binary-rain';
-            column.style.left = `${i * 20}px`;
-            column.style.top = '-100px';
-            
-            // Use deterministic values based on column index
-            const seed = i * 0.1;
-            const delay = (Math.sin(seed) * 0.5 + 0.5) * 5;
-            const duration = 3 + (Math.sin(seed * 2) * 0.5 + 0.5) * 4;
-            
-            column.style.animationDelay = `${delay}s`;
-            column.style.animationDuration = `${duration}s`;
-            
-            let binaryString = '';
-            for (let j = 0; j < 20; j++) {
-                const charSeed = (i + j) * 0.1;
-                const charIndex = Math.floor((Math.sin(charSeed) * 0.5 + 0.5) * binaryChars.length);
-                binaryString += binaryChars[charIndex] + '\n';
-            }
-            column.textContent = binaryString;
-            
-            binaryRainRef.current.appendChild(column);
         }
     };
 
@@ -269,10 +79,6 @@ export const Hero = ({ onLoaderComplete }: HeroProps) => {
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        // Only create binary rain on client side
-        if (typeof window !== 'undefined') {
-            createBinaryRain();
-        }
     }, []);
 
     // GSAP Animations
@@ -413,19 +219,8 @@ export const Hero = ({ onLoaderComplete }: HeroProps) => {
                 className="relative min-h-screen overflow-hidden bg-black transition-opacity duration-1000" 
                 style={{ opacity: mounted && loaderComplete ? 1 : 0 }}
             >
-                {/* Three.js Network 3D Scene */}
-                <NetworkThreeScene />
-                
-                {/* Binary Rain Effect */}
-                <div ref={binaryRainRef} className="absolute inset-0 pointer-events-none" />
-                
-                {/* Animated Background Elements */}
-                <FloatingBalls 
-                    mouseXSpring={mouseXSpring} 
-                    mouseYSpring={mouseYSpring} 
-                    ballsData={ballsData}
-                />
-                <ParticleSystem particlesData={particlesData} />
+                {/* Full-Stack Developer Canvas Animation */}
+                <FullStackCanvas />
                 
                 {/* Developer Grid Pattern */}
                 <motion.div 

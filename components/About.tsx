@@ -264,15 +264,22 @@ export const AboutSection = ({
                                                 />
                                             </motion.a>
                                             <div className="flex-1 text-sm text-gray-300">
-                                                {profile.label === "LeetCode" && (leetcodeStats.totalSolved != null || leetcodeStats.contestRating != null) ? (
-                                                    <>
-                                                        {leetcodeStats.totalSolved != null && (
-                                                            <p className="text-white font-medium">{leetcodeStats.totalSolved} solved</p>
-                                                        )}
-                                                        {leetcodeStats.contestRating != null && (
-                                                            <p className="text-gray-400">Rating: {leetcodeStats.contestRating}</p>
-                                                        )}
-                                                    </>
+                                                {profile.label === "LeetCode" ? (
+                                                    (leetcodeStats.totalSolved != null || leetcodeStats.contestRating != null) ? (
+                                                        <>
+                                                            {leetcodeStats.totalSolved != null && (
+                                                                <p className="text-white font-medium">{leetcodeStats.totalSolved} solved</p>
+                                                            )}
+                                                            {leetcodeStats.contestRating != null && (
+                                                                <p className="text-gray-400">Rating: {leetcodeStats.contestRating}</p>
+                                                            )}
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <p className="text-white font-medium">350+ solved</p>
+                                                            <p className="text-gray-400">Rating: 1570+</p>
+                                                        </>
+                                                    )
                                                 ) : profile.statText ? (
                                                     <p className="text-white font-medium">{profile.statText}</p>
                                                 ) : null}

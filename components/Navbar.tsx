@@ -1,12 +1,13 @@
 'use client'
 
 import { useTheme } from 'next-themes'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, Suspense } from 'react'
 import { FiMenu, FiX, FiHome, FiUser, FiCode, FiMail, FiDownload, FiTarget, FiBriefcase } from 'react-icons/fi'
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Link from 'next/link'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 // Register GSAP plugins
 if (typeof window !== 'undefined') {
@@ -17,13 +18,16 @@ interface NavbarProps {
   loaderComplete?: boolean;
 }
 
-export const Navbar = ({ loaderComplete = true }: NavbarProps) => {
+const NavbarContent = ({ loaderComplete = true }: NavbarProps) => {
   const {  } = useTheme()
   const [mounted, setMounted] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
   
+  const pathname = usePathname()
+  const router = useRouter()
+  const searchParams = useSearchParams()
   
   const { scrollY } = useScroll()
 
@@ -77,9 +81,32 @@ export const Navbar = ({ loaderComplete = true }: NavbarProps) => {
 
   }, [mounted, isOpen]);
 
+  // Handle cross-page scrolling
+  useEffect(() => {
+    if (pathname === '/' && searchParams && mounted) {
+      const scrollTo = searchParams.get('scrollTo')
+      if (scrollTo) {
+        setTimeout(() => {
+          const element = document.getElementById(scrollTo)
+          if (element) {
+            const offsetTop = element.offsetTop - 80 // Account for navbar height
+            window.scrollTo({
+              top: offsetTop,
+              behavior: 'smooth'
+            })
+          }
+          // Remove query param without triggering a reload
+          router.replace('/', { scroll: false })
+        }, 300)
+      }
+    }
+  }, [pathname, searchParams, mounted, router]);
+
   // Handle scroll effects and active section detection
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsScrolled(latest > 50)
+    
+    if (pathname !== '/') return
     
     // Detect active section based on scroll position
     const sections = ['home', 'about', 'projects', 'skills', 'experience', 'contact']
@@ -119,6 +146,22 @@ export const Navbar = ({ loaderComplete = true }: NavbarProps) => {
 
   // Smooth scroll to section
   const scrollToSection = (sectionId: string) => {
+    if (pathname !== '/') {
+      if (sectionId === 'home') {
+        router.push('/')
+      } else {
+        router.push(`/?scrollTo=${sectionId}`)
+      }
+      setIsOpen(false)
+      return
+    }
+
+    if (sectionId === 'home') {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      setIsOpen(false)
+      return
+    }
+
     const element = document.getElementById(sectionId)
     if (element) {
       const offsetTop = element.offsetTop - 80 // Account for navbar height
@@ -438,5 +481,13 @@ export const Navbar = ({ loaderComplete = true }: NavbarProps) => {
         )}
       </AnimatePresence>
     </>
+  )
+}
+
+export const Navbar = (props: NavbarProps) => {
+  return (
+    <Suspense fallback={<div className="h-20" />}>
+      <NavbarContent {...props} />
+    </Suspense>
   )
 }

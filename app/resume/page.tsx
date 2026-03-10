@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Download, FileText, Loader2, AlertCircle } from 'lucide-react';
+import { Download, Loader2, AlertCircle } from 'lucide-react';
+import { Navbar } from '@/components/Navbar';
+import ShootingStarCursor from '@/components/ShootingStarCursor';
 
 const Resume = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -31,104 +33,74 @@ const Resume = () => {
   };
 
   return (
-    <div className="min-h-screen p-4 sm:p-6 lg:p-8" 
-         style={{ 
-           background: 'linear-gradient(45deg, rgba(6, 182, 212, 0.15), rgba(139, 92, 246, 0.15), rgba(236, 72, 153, 0.15))' 
-         }}>
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-lg shadow-lg p-6 mb-6">
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-gradient-to-r from-cyan-500 to-purple-500">
-                <FileText className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-800">Resume - Sarvjeet Swanshi</h1>
-                <p className="text-gray-600">View and download my resume</p>
-              </div>
+    <main className="min-h-screen transition-colors duration-300 relative overflow-hidden bg-black cursor-none">
+      <ShootingStarCursor />
+      <Navbar loaderComplete={true} />
+
+      <div className="relative z-10 pt-24 pb-12 px-4 sm:px-6 lg:px-8 min-h-screen flex flex-col">
+        <div className="max-w-5xl mx-auto w-full flex-grow flex flex-col">
+          {/* Header */}
+          <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
+            <div>
+              <h1 className="text-3xl font-bold text-white">Resume</h1>
+              <p className="text-gray-400 mt-2">View and download my professional resume</p>
             </div>
             
             <button
               onClick={handleDownload}
-              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-500 text-white font-medium rounded-lg hover:from-cyan-600 hover:to-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="flex items-center gap-2 px-6 py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-200 transition-all duration-200 shadow-[0_0_15px_rgba(255,255,255,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.5)] transform hover:scale-105"
             >
               <Download className="w-5 h-5" />
               Download PDF
             </button>
           </div>
-        </div>
 
-        {/* PDF Viewer Container */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-lg shadow-lg overflow-hidden">
-          <div className="relative">
+          {/* PDF Viewer Container */}
+          <div className="flex-grow w-full bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl overflow-hidden shadow-2xl relative mb-8" style={{ minHeight: '75vh' }}>
             {/* Loading State */}
             {isLoading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-white/90 z-10">
-                <div className="flex flex-col items-center gap-3">
-                  <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
-                  <p className="text-gray-600">Loading resume...</p>
+              <div className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-10 w-full h-full">
+                <div className="flex flex-col items-center gap-4">
+                  <Loader2 className="w-10 h-10 animate-spin text-white" />
+                  <p className="text-gray-300 font-medium">Loading resume...</p>
                 </div>
               </div>
             )}
 
             {/* Error State */}
             {hasError && (
-              <div className="absolute inset-0 flex items-center justify-center bg-white/90 z-10">
-                <div className="flex flex-col items-center gap-3 text-center p-6">
-                  <AlertCircle className="w-12 h-12 text-red-500" />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-10 w-full h-full">
+                <div className="flex flex-col items-center gap-4 text-center p-8 bg-white/5 rounded-xl border border-red-500/20">
+                  <AlertCircle className="w-12 h-12 text-red-400" />
                   <div>
-                    <p className="text-gray-800 font-medium">Unable to load PDF</p>
+                    <p className="text-white font-medium text-lg">Unable to load PDF directly</p>
+                    <p className="text-gray-400 mt-1">Don't worry, you can still download it.</p>
                   </div>
                   <button
                     onClick={handleDownload}
-                    className="mt-4 flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-lg hover:from-cyan-600 hover:to-purple-600 transition-all duration-200"
+                    className="mt-4 flex items-center gap-2 px-6 py-2.5 bg-white text-black font-medium rounded-lg hover:bg-gray-200 transition-all duration-200"
                   >
                     <Download className="w-4 h-4" />
-                    Try Download Instead
+                    Download File
                   </button>
                 </div>
               </div>
             )}
 
             {/* PDF Embed */}
-            <div className="w-full" style={{ height: '80vh' }}>
-              <embed
-                src={resumePdfPath}
-                type="application/pdf"
-                width="100%"
-                height="100%"
+            <div className="w-full h-full absolute inset-0">
+              <iframe
+                src={`${resumePdfPath}#toolbar=0`}
+                title="Resume PDF"
                 onLoad={handlePdfLoad}
                 onError={handlePdfError}
-                className="border-none"
+                className="border-none w-full h-full"
               />
             </div>
           </div>
-
-          {/* Footer */}
-          <div className="p-4 bg-gray-50/80 border-t border-gray-200">
-            <div className="flex items-center justify-between text-sm text-gray-600">
-              <span>Professional Resume - PDF Format</span>
-              <button
-                onClick={handleDownload}
-                className="flex items-center gap-1 text-purple-600 hover:text-purple-700 font-medium"
-              >
-                <Download className="w-4 h-4" />
-                Download
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Additional Info */}
-        <div className="mt-6 bg-white/60 backdrop-blur-sm rounded-lg p-4">
-          <p className="text-sm text-gray-600 text-center">
-            <strong>Note:</strong> 
-            If the PDF doesn&apos;t display, you can still download it using the download button.
-          </p>
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 

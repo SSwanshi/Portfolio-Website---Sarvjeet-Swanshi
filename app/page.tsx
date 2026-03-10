@@ -2,6 +2,7 @@
 
 import { Hero } from "../components/Hero";
 import { SkillsSection, Skill } from "../components/Skills";
+import {ExperienceSection} from "../components/Experience";
 import ContactSection from "../components/Contact";
 import { Navbar } from "../components/Navbar";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -11,6 +12,7 @@ import { ProjectsSection } from "@/components/ProjectSection";
 import { AboutSection } from "@/components/About";
 import '../styles/animations.css';
 import { Footer } from "@/components/Footer";
+import ShootingStarCursor from "@/components/ShootingStarCursor";
 
 
 const mySkills: Skill[] = [
@@ -121,7 +123,9 @@ export default function Home() {
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   return (
-    <main ref={ref} className="min-h-screen transition-colors duration-300 relative overflow-hidden bg-black" style={{ position: 'relative' }}>
+    <main ref={ref} className="min-h-screen transition-colors duration-300 relative overflow-hidden bg-black cursor-none" style={{ position: 'relative' }}>
+      {/* Shooting Star Cursor Effect */}
+      <ShootingStarCursor />
       {/* Navbar */}
       <Navbar loaderComplete={loaderComplete} />
 
@@ -173,6 +177,7 @@ export default function Home() {
 />
         <ProjectsSection projects={projects} />
         <SkillsSection skills={mySkills} />
+        <ExperienceSection />
         <ContactSection
           heading="Let's Work Together"
           description="Ready to bring your ideas to life? Let's create something amazing together."

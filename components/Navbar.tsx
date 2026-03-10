@@ -2,7 +2,7 @@
 
 import { useTheme } from 'next-themes'
 import { useEffect, useState, useRef } from 'react'
-import { FiMenu, FiX, FiHome, FiUser, FiCode, FiMail, FiDownload, FiTarget } from 'react-icons/fi'
+import { FiMenu, FiX, FiHome, FiUser, FiCode, FiMail, FiDownload, FiTarget, FiBriefcase } from 'react-icons/fi'
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -82,7 +82,7 @@ export const Navbar = ({ loaderComplete = true }: NavbarProps) => {
     setIsScrolled(latest > 50)
     
     // Detect active section based on scroll position
-    const sections = ['home', 'about', 'projects', 'skills', 'contact']
+    const sections = ['home', 'about', 'projects', 'skills', 'experience', 'contact']
     
     // Get all section elements and their positions
     const sectionElements = sections.map(section => {
@@ -136,6 +136,7 @@ export const Navbar = ({ loaderComplete = true }: NavbarProps) => {
     { name: 'About', href: 'about', icon: FiUser },
     { name: 'Projects', href: 'projects', icon: FiCode },
     { name: 'Skills', href: 'skills', icon: FiTarget },
+    { name: 'Experience', href: 'experience', icon: FiBriefcase },
     { name: 'Contact', href: 'contact', icon: FiMail },
   ]
 

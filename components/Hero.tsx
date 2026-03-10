@@ -10,7 +10,6 @@ import AnimatedButton from './viewProject';
 import ResumeButton from './viewResume';
 import { FloatingAvatar } from './FloatingAvatar';
 import { ScrollIndicator } from './ScrollIndicator';
-import CursorLightEffect from './CursorLightEffect';
 import { TechLoader } from './TechLoader';
 import { NetworkThreeScene } from './NetworkThreeScene';
 
@@ -401,8 +400,6 @@ export const Hero = ({ onLoaderComplete }: HeroProps) => {
 
     return (
         <div className="relative">
-            <CursorLightEffect />
-            
             {/* Techy Loader */}
             {!loaderComplete && (
                 <TechLoader onComplete={() => {
